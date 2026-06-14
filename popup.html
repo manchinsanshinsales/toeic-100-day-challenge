@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>紙の単語帳メーカー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- ヘッダー -->
+  <header class="header">
+    <div class="header-glow"></div>
+    <h1 class="header-title">
+      <span class="header-icon">📝</span>
+      紙の単語帳メーカー
+    </h1>
+  </header>
+
+  <!-- カウンター -->
+  <section class="counter-section">
+    <div class="counter-card">
+      <div class="counter-number" id="word-count">0</div>
+      <div class="counter-label">語がプールされています</div>
+    </div>
+  </section>
+
+  <!-- メインボタン -->
+  <section class="action-section">
+    <button class="btn-print" id="btn-print">
+      <span class="btn-icon">🖨️</span>
+      <span class="btn-text">印刷プレビューを開く</span>
+    </button>
+  </section>
+
+  <!-- 単語リスト -->
+  <section class="word-list-section">
+    <h2 class="section-title">最近追加した単語</h2>
+    <div class="word-list" id="word-list">
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">📚</div>
+        <p>まだ単語がありません</p>
+        <p class="empty-hint">Webページ上で英単語を選択して<br>「単語帳に追加」をクリック！</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <footer class="footer">
+    <button class="btn-settings" id="btn-settings">
+      <span>⚙️</span>
+      <span>設定</span>
+    </button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

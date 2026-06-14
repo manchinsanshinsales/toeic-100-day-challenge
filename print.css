@@ -1,0 +1,477 @@
+/* ============================================================
+   print.css — 印刷プレビュー＆印刷レイアウト
+   A4名刺10面（エーワン互換）両面印刷対応
+   ============================================================ */
+
+/* ============================================================
+   カスタムプロパティ（CSS変数）
+   余白微調整をスライダーから動的に変更
+   ============================================================ */
+:root {
+  /* 名刺10面のベース寸法 */
+  --card-width: 91mm;
+  --card-height: 55mm;
+  --grid-cols: 2;
+  --grid-rows: 5;
+  /* A4ベース余白（エーワン互換） */
+  --base-margin-top: 11mm;
+  --base-margin-left: 14mm;
+  /* ユーザー微調整値（JS から変更） */
+  --adjust-top: 0mm;
+  --adjust-bottom: 0mm;
+  --adjust-left: 0mm;
+  --adjust-right: 0mm;
+}
+
+/* --- リセット --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   画面表示用スタイル
+   ============================================================ */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0a0a1a;
+  color: #e2e8f0;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* --- コントロールパネル --- */
+.control-panel {
+  width: 320px;
+  min-height: 100vh;
+  padding: 24px 20px;
+  background: #0f0f23;
+  border-right: 1px solid rgba(99, 102, 241, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.control-header {
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.control-title {
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #e2e8f0, #a5b4fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.control-subtitle {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.control-select {
+  padding: 10px 12px;
+  background: rgba(26, 26, 62, 0.6);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+/* --- 余白スライダー --- */
+.margin-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.margin-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.margin-label {
+  width: 20px;
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+  text-align: center;
+}
+
+.margin-slider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 2px;
+  outline: none;
+}
+
+.margin-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #6366f1;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+}
+
+.margin-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+.margin-value {
+  width: 36px;
+  font-size: 11px;
+  color: #94a3b8;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- プレビュー切替 --- */
+.preview-toggle {
+  display: flex;
+  gap: 4px;
+  background: rgba(26, 26, 62, 0.4);
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 8px 4px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #64748b;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.toggle-btn.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+}
+
+.toggle-btn:hover:not(.active) {
+  color: #94a3b8;
+}
+
+/* --- チェックボックス --- */
+.control-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.control-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkbox-mark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+  flex-shrink: 0;
+}
+
+.control-checkbox input:checked + .checkbox-mark {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+
+.control-checkbox input:checked + .checkbox-mark::after {
+  content: '✓';
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* --- 印刷ボタン --- */
+.btn-do-print {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+  margin-top: auto;
+}
+
+.btn-do-print:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
+}
+
+.btn-back {
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 8px;
+  color: #64748b;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.btn-back:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  color: #94a3b8;
+}
+
+/* ============================================================
+   プレビューエリア（画面表示）
+   ============================================================ */
+.print-preview {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  overflow-y: auto;
+  background: #1a1a2e;
+}
+
+.preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #475569;
+  text-align: center;
+}
+
+.preview-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+/* --- ページプレビュー（画面上はカード風） --- */
+.print-page {
+  width: 210mm;
+  min-height: 297mm;
+  background: #fff;
+  color: #000;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.page-label {
+  padding: 8px 16px;
+  background: rgba(99, 102, 241, 0.1);
+  font-size: 12px;
+  font-weight: 600;
+  color: #6366f1;
+  text-align: center;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, var(--card-width));
+  grid-template-rows: repeat(5, var(--card-height));
+  padding-top: calc(var(--base-margin-top) + var(--adjust-top));
+  padding-left: calc(var(--base-margin-left) + var(--adjust-left));
+  padding-right: calc(var(--base-margin-left) + var(--adjust-right));
+  padding-bottom: var(--adjust-bottom);
+}
+
+/* うら面は右→左に配置 */
+.card-grid.back-face {
+  direction: rtl;
+}
+
+.card-grid.back-face .card {
+  direction: ltr;
+}
+
+/* --- カード共通 --- */
+.card {
+  width: var(--card-width);
+  height: var(--card-height);
+  border: 1px dashed #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6mm;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+/* おもて面カード */
+.card.front .card-word {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  text-align: center;
+  word-break: break-word;
+}
+
+.card.front .card-pronunciation {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* うら面カード */
+.card.back {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2mm;
+}
+
+.card.back .card-meaning {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+  width: 100%;
+}
+
+.card.back .card-toeic {
+  font-size: 10px;
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.card.back .card-example {
+  font-size: 9px;
+  color: #475569;
+  line-height: 1.4;
+  width: 100%;
+  flex: 1;
+}
+
+.card.back .card-url {
+  font-size: 7px;
+  color: #94a3b8;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 空カード */
+.card.empty {
+  background: #f8f9fa;
+  border-style: dotted;
+  border-color: #e2e8f0;
+}
+
+/* ============================================================
+   印刷用スタイル — @media print
+   ============================================================ */
+@media print {
+  /* コントロールパネルを非表示 */
+  .control-panel {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    display: block;
+  }
+
+  /* ページ設定 */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .print-preview {
+    padding: 0;
+    gap: 0;
+    background: #fff;
+    overflow: visible;
+  }
+
+  .print-page {
+    width: 210mm;
+    height: 297mm;
+    box-shadow: none;
+    border-radius: 0;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .print-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .page-label {
+    display: none;
+  }
+
+  /* カードの破線を印刷 */
+  .card {
+    border: 0.5px dashed #ccc;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .card.back .card-toeic {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

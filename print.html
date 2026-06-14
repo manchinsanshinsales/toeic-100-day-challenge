@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>印刷プレビュー — 紙の単語帳メーカー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="print.css">
+</head>
+<body>
+  <!-- ============================================================
+       コントロールパネル（印刷時は非表示）
+       ============================================================ -->
+  <aside class="control-panel" id="control-panel">
+    <div class="control-header">
+      <h1 class="control-title">
+        <span>🖨️</span>
+        印刷プレビュー
+      </h1>
+      <p class="control-subtitle" id="card-info">0 語 / 0 ページ</p>
+    </div>
+
+    <!-- 用紙タイプ -->
+    <div class="control-group">
+      <label class="control-label">用紙タイプ</label>
+      <select class="control-select" id="paper-type">
+        <option value="a4-10">A4 10面 名刺用紙（エーワン互換）</option>
+      </select>
+    </div>
+
+    <!-- 余白微調整 -->
+    <div class="control-group">
+      <label class="control-label">余白微調整（mm）</label>
+      <div class="margin-controls">
+        <div class="margin-item">
+          <span class="margin-label">上</span>
+          <input type="range" id="margin-top" min="-5" max="5" step="0.1" value="0" class="margin-slider">
+          <span class="margin-value" id="margin-top-val">0.0</span>
+        </div>
+        <div class="margin-item">
+          <span class="margin-label">下</span>
+          <input type="range" id="margin-bottom" min="-5" max="5" step="0.1" value="0" class="margin-slider">
+          <span class="margin-value" id="margin-bottom-val">0.0</span>
+        </div>
+        <div class="margin-item">
+          <span class="margin-label">左</span>
+          <input type="range" id="margin-left" min="-5" max="5" step="0.1" value="0" class="margin-slider">
+          <span class="margin-value" id="margin-left-val">0.0</span>
+        </div>
+        <div class="margin-item">
+          <span class="margin-label">右</span>
+          <input type="range" id="margin-right" min="-5" max="5" step="0.1" value="0" class="margin-slider">
+          <span class="margin-value" id="margin-right-val">0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- プレビュー切替 -->
+    <div class="control-group">
+      <label class="control-label">プレビュー表示</label>
+      <div class="preview-toggle">
+        <button class="toggle-btn active" id="btn-show-front" data-face="front">おもて面（英語）</button>
+        <button class="toggle-btn" id="btn-show-back" data-face="back">うら面（日本語）</button>
+        <button class="toggle-btn" id="btn-show-both" data-face="both">両方</button>
+      </div>
+    </div>
+
+    <!-- アクション -->
+    <div class="control-group">
+      <label class="control-checkbox">
+        <input type="checkbox" id="clear-after-print">
+        <span class="checkbox-mark"></span>
+        <span>印刷後にデータをクリアする</span>
+      </label>
+    </div>
+
+    <button class="btn-do-print" id="btn-do-print">
+      <span>🖨️</span>
+      <span>印刷する</span>
+    </button>
+
+    <button class="btn-back" id="btn-back">← ポップアップに戻る</button>
+  </aside>
+
+  <!-- ============================================================
+       印刷プレビューエリア
+       ============================================================ -->
+  <main class="print-preview" id="print-preview">
+    <div class="preview-empty" id="preview-empty">
+      <div class="preview-empty-icon">📄</div>
+      <p>印刷する単語がありません</p>
+    </div>
+    <!-- 動的に生成されるページがここに入る -->
+  </main>
+
+  <script src="print.js"></script>
+</body>
+</html>

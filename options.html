@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>設定 — 紙の単語帳メーカー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header class="page-header">
+      <h1 class="page-title">
+        <span class="title-icon">⚙️</span>
+        紙の単語帳メーカー — 設定
+      </h1>
+    </header>
+
+    <!-- ============================================================
+         セクション1: Gemini Nano 動作ステータス
+         ============================================================ -->
+    <section class="section">
+      <h2 class="section-title">🧠 Gemini Nano 動作ステータス</h2>
+      <div class="status-card" id="status-card">
+        <div class="status-indicator">
+          <span class="status-icon" id="status-icon">⏳</span>
+          <span class="status-text" id="status-text">確認中...</span>
+        </div>
+        <p class="status-detail" id="status-detail"></p>
+      </div>
+
+      <!-- 利用不可時の手順（初期非表示） -->
+      <div class="setup-guide" id="setup-guide" style="display: none;">
+        <h3 class="guide-title">Gemini Nano を有効にする手順</h3>
+        <ol class="guide-steps">
+          <li>Chrome バージョン 127 以上を使用していることを確認</li>
+          <li>アドレスバーに <code>chrome://flags/#optimization-guide-on-device-model</code> を入力</li>
+          <li>「Enabled BypassPerfRequirement」を選択</li>
+          <li>アドレスバーに <code>chrome://flags/#prompt-api-for-gemini-nano</code> を入力</li>
+          <li>「Enabled」を選択</li>
+          <li>Chrome を再起動</li>
+          <li>モデルのダウンロードが完了するまで数分〜数十分待機</li>
+        </ol>
+      </div>
+
+      <!-- テスト実行 -->
+      <div class="test-area">
+        <button class="btn-test" id="btn-test">
+          <span>🧪</span>
+          <span>テスト翻訳を実行（"curtail"）</span>
+        </button>
+        <div class="test-result" id="test-result" style="display: none;">
+          <pre id="test-output"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         セクション2: 印刷設定
+         ============================================================ -->
+    <section class="section">
+      <h2 class="section-title">🖨️ 印刷設定</h2>
+
+      <div class="setting-group">
+        <label class="setting-label">デフォルト用紙タイプ</label>
+        <select class="setting-select" id="default-paper">
+          <option value="a4-10">A4 10面 名刺用紙（エーワン互換）</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label class="setting-label">デフォルト余白オフセット（mm）</label>
+        <div class="offset-grid">
+          <div class="offset-item">
+            <label>上</label>
+            <input type="number" id="offset-top" value="0" step="0.1" min="-5" max="5" class="offset-input">
+          </div>
+          <div class="offset-item">
+            <label>下</label>
+            <input type="number" id="offset-bottom" value="0" step="0.1" min="-5" max="5" class="offset-input">
+          </div>
+          <div class="offset-item">
+            <label>左</label>
+            <input type="number" id="offset-left" value="0" step="0.1" min="-5" max="5" class="offset-input">
+          </div>
+          <div class="offset-item">
+            <label>右</label>
+            <input type="number" id="offset-right" value="0" step="0.1" min="-5" max="5" class="offset-input">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-save" id="btn-save-settings">
+        <span>💾</span>
+        <span>設定を保存</span>
+      </button>
+      <div class="save-feedback" id="save-feedback" style="display: none;">✅ 保存しました</div>
+    </section>
+
+    <!-- ============================================================
+         セクション3: データ管理
+         ============================================================ -->
+    <section class="section">
+      <h2 class="section-title">📊 データ管理</h2>
+
+      <div class="data-stat">
+        <span class="data-stat-label">保存済み単語数:</span>
+        <span class="data-stat-value" id="word-count">0</span>
+      </div>
+
+      <div class="data-actions">
+        <button class="btn-export" id="btn-export">
+          <span>📥</span>
+          <span>JSONでエクスポート</span>
+        </button>
+        <button class="btn-danger" id="btn-delete-all">
+          <span>🗑️</span>
+          <span>すべての単語データを削除</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

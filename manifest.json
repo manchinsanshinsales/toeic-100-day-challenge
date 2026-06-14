@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "紙の単語帳メーカー",
+  "version": "1.0.0",
+  "description": "Webサイトから1クリックで単語を収集し、紙の単語カードとして印刷できるツール",
+  "permissions": ["storage", "contextMenus", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "紙の単語帳メーカー"
+  },
+  "options_page": "options.html"
+}
